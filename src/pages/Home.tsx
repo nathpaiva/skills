@@ -5,11 +5,18 @@ import {debounce} from '../helper';
 
 export const Home = () => {
   const [newSkill, setNewSkill] = useState<string>('');
-  const [mySkills, setMySkills] = useState<string[]>([]);
+  const [mySkills, setMySkills] = useState<{skill: string; id: string}[]>([]);
+  console.log('🚀 ~ file: Home.tsx:9 ~ Home ~ mySkills:', mySkills);
   const [greeting, setGreeting] = useState('');
 
   const handleAddSkill = () => {
-    setMySkills(prevMySkills => [...prevMySkills, newSkill]);
+    setMySkills(prevMySkills => [
+      ...prevMySkills,
+      {
+        skill: newSkill,
+        id: new Date().getTime().toString(),
+      },
+    ]);
   };
 
   const handleOnChange = debounce(1000, (param: string) => {
@@ -50,8 +57,8 @@ export const Home = () => {
 
       <FlatList
         data={mySkills}
-        keyExtractor={(item, index) => `${item}-${index}`}
-        renderItem={({item}) => <CardSkill skill={item} />}
+        keyExtractor={item => item.id}
+        renderItem={({item}) => <CardSkill skill={item.skill} />}
       />
     </View>
   );
